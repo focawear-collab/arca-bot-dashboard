@@ -7,9 +7,23 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0c0f14;--surface:#141820;--surface2:#1a1f2a;--border:#252b38;--text1:#e8ecf4;--text2:#8892a4;--text3:#5a6478;--amber:#f59e0b;--amber-bg:#f59e0b18;--green:#22c55e;--green-bg:#22c55e18;--red:#ef4444;--red-bg:#ef444418;--blue:#3b82f6;--blue-bg:#3b82f618;--purple:#a855f7;--purple-bg:#a855f718;--cyan:#06b6d4;--cyan-bg:#06b6d418;--accent:#f59e0b}
+:root{
+  --bg:#0c0f14;--surface:#141820;--surface2:#1a1f2a;--border:#252b38;
+  --text1:#e8ecf4;--text2:#8892a4;--text3:#5a6478;
+  --amber:#f59e0b;--amber-bg:#f59e0b18;
+  --green:#22c55e;--green-bg:#22c55e18;
+  --red:#ef4444;--red-bg:#ef444418;
+  --blue:#3b82f6;--blue-bg:#3b82f618;
+  --purple:#a855f7;--purple-bg:#a855f718;
+  --cyan:#06b6d4;--cyan-bg:#06b6d418;
+  --accent:#f59e0b;
+}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;overflow-x:hidden}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
 .container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+
+/* Header */
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
 .brand{display:flex;align-items:center;gap:1rem}
 .brand-icon{width:48px;height:48px;border-radius:6px;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.4)}
@@ -19,10 +33,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);mi
 .live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .status{font-size:.8rem;color:var(--text2);display:flex;align-items:center}
+
+/* Period selector */
 .period-bar{display:flex;gap:.5rem;background:var(--surface);border-radius:10px;padding:4px;border:1px solid var(--border)}
 .period-btn{padding:.45rem 1rem;border-radius:8px;border:none;background:transparent;color:var(--text2);font-size:.8rem;font-family:inherit;cursor:pointer;transition:.2s}
 .period-btn.active{background:var(--amber);color:#000;font-weight:700}
 .period-btn:hover:not(.active){color:var(--text1);background:var(--surface2)}
+
+/* KPI Cards Row */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;position:relative;overflow:hidden;transition:border-color .2s}
 .kpi:hover{border-color:var(--amber)}
@@ -30,20 +48,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);mi
 .kpi-value{font-family:'Instrument Serif',serif;font-size:2.2rem;line-height:1;margin-bottom:.3rem}
 .kpi-sub{font-size:.75rem;color:var(--text3)}
 .kpi-icon{position:absolute;top:1rem;right:1rem;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+
+/* Charts area */
 .charts-row{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:2rem}
 @media(max-width:768px){.charts-row{grid-template-columns:1fr}}
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem}
 .chart-title{font-size:.85rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
 .chart-title .dot{width:8px;height:8px;border-radius:50%}
+
+/* Bar chart */
 .bar-chart{display:flex;align-items:flex-end;gap:6px;height:180px;padding-top:1rem}
 .bar-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px}
 .bar{border-radius:4px 4px 0 0;width:100%;min-height:4px;transition:height .6s ease}
+.bar-label{font-size:.6rem;color:var(--text3);writing-mode:vertical-rl;transform:rotate(180deg);max-height:60px;overflow:hidden;text-overflow:ellipsis}
+
+/* Donut / category list */
 .cat-list{display:flex;flex-direction:column;gap:.7rem}
 .cat-item{display:flex;align-items:center;gap:.7rem}
 .cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .cat-name{font-size:.82rem;flex:1;color:var(--text2)}
 .cat-count{font-size:.85rem;font-weight:700}
 .cat-pct{font-size:.72rem;color:var(--text3);min-width:36px;text-align:right}
+
+/* Table */
 .table-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;overflow-x:auto}
 .table-card h3{font-size:.85rem;font-weight:700;margin-bottom:1rem}
 table{width:100%;border-collapse:collapse;font-size:.8rem}
@@ -58,57 +85,303 @@ tr:hover td{color:var(--text1);background:var(--surface2)}
 .tag-trabajo{background:var(--amber-bg);color:var(--amber)}
 .tag-escalar{background:var(--red-bg);color:var(--red)}
 .tag-otro{background:#ffffff0a;color:var(--text3)}
+
+/* Footer */
 .footer{text-align:center;padding:2rem 0;color:var(--text3);font-size:.72rem}
 .footer a{color:var(--amber);text-decoration:none}
+
+/* Loading */
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:1rem;color:var(--text2)}
 .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* Error */
 .error-box{background:var(--red-bg);border:1px solid #ef444444;border-radius:12px;padding:1.5rem;text-align:center;color:var(--red)}
+
+/* Chat bubbles */
+.conv-cell{display:flex;flex-direction:column;gap:.45rem;padding:.2rem 0}
+.bubble{padding:.45rem .7rem;border-radius:10px;font-size:.78rem;line-height:1.45;max-width:100%;word-break:break-word}
+.bubble-user{background:var(--surface2);color:var(--text2);border-bottom-left-radius:3px}
+.bubble-bot{background:#f59e0b14;border:1px solid #f59e0b22;color:var(--text1);border-bottom-left-radius:3px}
+.bubble-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px}
+.bubble-bot .bubble-label{color:#f59e0b99}
 </style>
 </head>
 <body>
+<div class="grain"></div>
 <div class="container">
-<div class="header">
-<div class="brand"><div class="brand-icon"><svg viewBox="0 0 120 60" width="44" height="22" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="60" fill="#000"/><rect x="3" y="3" width="114" height="54" fill="none" stroke="#fff" stroke-width="3"/><text x="60" y="40" text-anchor="middle" fill="#fff" font-family="'Helvetica Neue',Arial,sans-serif" font-size="28" font-weight="600" letter-spacing="6">ARCA</text></svg></div><div><h1>Arca <span>Bar</span> — Bot IA</h1><div class="brand-sub">Dashboard de KPIs en tiempo real</div></div></div>
-<div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
-<div class="status"><span class="live-dot"></span> Conectado a Google Sheets</div>
-<div class="period-bar">
-<button class="period-btn active" onclick="setPeriod(7)">7 días</button>
-<button class="period-btn" onclick="setPeriod(30)">30 días</button>
-<button class="period-btn" onclick="setPeriod(0)">Todo</button>
-</div></div></div>
-<div id="content"><div class="loading"><div class="spinner"></div>Cargando datos desde Google Sheets…</div></div>
-</div><script>
-const SHEET_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vTGPhTHXLAXxW5k7mjqSPBwVAz4jLfTbGrX3--NL5THclo1ml8yLGwf4zTAH8RDdKoxy8taNUHNHG5l/pub?output=csv';
-const CATEGORIES=[{key:'reserva',label:'Reservas',color:'#22c55e',keywords:['reserv','mesa','disponibilidad','book','personas','pax']},{key:'horario',label:'Horarios',color:'#3b82f6',keywords:['horario','hora','abierto','abre','abren','funcionan','atienden','cerrado','cierra','cuando']},{key:'menu',label:'Menú / Carta',color:'#a855f7',keywords:['menu','carta','plato','comida','almuerzo','comer','vegano','vegetarian','sin gluten','precio','cuesta','valen']},{key:'evento',label:'Eventos / Grupos',color:'#06b6d4',keywords:['evento','grupo','cumpleaño','fiesta','celebr','corporate','empresa','privado','capacidad']},{key:'trabajo',label:'Trabajo / CV',color:'#f59e0b',keywords:['trabaj','empleo','cv','curriculum','postul','vacante','puesto']},{key:'ubicacion',label:'Ubicación',color:'#ec4899',keywords:['donde','dirección','direccion','ubicación','ubicacion','llegar','metro','estacion','mapa','calle']},{key:'otro',label:'Otros',color:'#5a6478',keywords:[]}];
-const ESC_KW=['escalar','reclamo','queja','malo','pésimo','horrible','asco','problema','no funciona','error'];
-let allRows=[],currentPeriod=7;
-function classify(msg){const m=msg.toLowerCase();for(const cat of CATEGORIES){if(cat.key==='otro')continue;if(cat.keywords.some(k=>m.includes(k)))return cat}return CATEGORIES.find(c=>c.key==='otro')}
-function isEsc(msg){return ESC_KW.some(k=>msg.toLowerCase().includes(k))}
-function parseCSV(text){const lines=text.trim().split('\n');if(lines.length<2)return[];const hdr=lines[0].split(',').map(h=>h.replace(/"/g,'').trim());return lines.slice(1).map(line=>{const v=[];let c='',q=false;for(let i=0;i<line.length;i++){if(line[i]==='"'){q=!q;continue}if(line[i]===','&&!q){v.push(c.trim());c='';continue}c+=line[i]}v.push(c.trim());const o={};hdr.forEach((h,i)=>o[h]=v[i]||'');return o})}
-function filterByPeriod(rows,days){if(days===0)return rows;const cut=new Date(Date.now()-days*864e5);return rows.filter(r=>{const d=pDate(r);return d&&d>=cut})}
-function pDate(row){const f=row.Fecha||row.fecha||'';if(!f)return null;if(f.includes('/')){const p=f.split('/');return new Date(p[2],p[1]-1,p[0])}if(f.match(/^\d{4}-/))return new Date(f);if(f.includes('-')){const p=f.split('-');return new Date(p[2],p[1]-1,p[0])}return new Date(f)}
-function setPeriod(days){currentPeriod=days;document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');render(filterByPeriod(allRows,days))}
-function render(rows){const el=document.getElementById('content');if(!rows.length){el.innerHTML='<div class="error-box">No hay datos para el período seleccionado.</div>';return}
-const cl=rows.map(r=>{const msg=r.Mensaje||r.mensaje||'';return{...r,cat:classify(msg),esc:isEsc(msg),msg}});
-const tot=cl.length,uniq=new Set(cl.map(r=>(r.Usuario||r.usuario||'').toLowerCase())).size;
-const esc=cl.filter(r=>r.esc).length,escR=tot>0?((esc/tot)*100).toFixed(1):'0',resR=tot>0?(((tot-esc)/tot)*100).toFixed(1):'0';
-const cpm=0.003,cost=(tot*cpm).toFixed(2);
-const cc={};CATEGORIES.forEach(c=>cc[c.key]=0);cl.forEach(r=>cc[r.cat.key]++);
-const dm={};cl.forEach(r=>{const d=pDate(r);if(!d)return;const k=d.toISOString().slice(0,10);dm[k]=(dm[k]||0)+1});
-const dk=Object.keys(dm).sort(),mx=Math.max(...Object.values(dm),1);
-el.innerHTML='<div class="kpi-grid">'+
-'<div class="kpi"><div class="kpi-icon" style="background:var(--blue-bg);color:var(--blue)">💬</div><div class="kpi-label">Total Mensajes</div><div class="kpi-value">'+tot+'</div><div class="kpi-sub">'+uniq+' usuarios únicos</div></div>'+
-'<div class="kpi"><div class="kpi-icon" style="background:var(--green-bg);color:var(--green)">✅</div><div class="kpi-label">Tasa Resolución IA</div><div class="kpi-value">'+resR+'%</div><div class="kpi-sub">'+(tot-esc)+' resueltos sin humano</div></div>'+
-'<div class="kpi"><div class="kpi-icon" style="background:var(--red-bg);color:var(--red)">🚨</div><div class="kpi-label">Escalaciones</div><div class="kpi-value">'+esc+'</div><div class="kpi-sub">'+escR+'% del total</div></div>'+
-'<div class="kpi"><div class="kpi-icon" style="background:var(--amber-bg);color:var(--amber)">💰</div><div class="kpi-label">Costo Estimado IA</div><div class="kpi-value">$'+cost+'</div><div class="kpi-sub">~$'+cpm.toFixed(3)+' USD/msg (GPT-4o-mini)</div></div>'+
-'<div class="kpi"><div class="kpi-icon" style="background:var(--purple-bg);color:var(--purple)">📊</div><div class="kpi-label">Promedio Diario</div><div class="kpi-value">'+(dk.length>0?(tot/dk.length).toFixed(1):'0')+'</div><div class="kpi-sub">mensajes/día ('+dk.length+' días con data)</div></div>'+
-'</div><div class="charts-row"><div class="chart-card"><div class="chart-title"><span class="dot" style="background:var(--amber)"></span> Volumen Diario</div><div class="bar-chart">'+dk.map(k=>'<div class="bar-col"><div style="font-size:.65rem;color:var(--text2)">'+dm[k]+'</div><div class="bar" style="height:'+(dm[k]/mx*160)+'px;background:linear-gradient(180deg,var(--amber),#d97706)"></div><div style="font-size:.6rem;color:var(--text3);margin-top:4px">'+k.slice(5)+'</div></div>').join('')+'</div></div>'+
-'<div class="chart-card"><div class="chart-title"><span class="dot" style="background:var(--purple)"></span> Categorías</div><div class="cat-list">'+CATEGORIES.filter(c=>cc[c.key]>0).sort((a,b)=>cc[b.key]-cc[a.key]).map(c=>'<div class="cat-item"><div class="cat-dot" style="background:'+c.color+'"></div><div class="cat-name">'+c.label+'</div><div class="cat-count">'+cc[c.key]+'</div><div class="cat-pct">'+((cc[c.key]/tot)*100).toFixed(0)+'%</div></div>').join('')+'</div></div></div>'+
-'<div class="table-card"><h3>Últimos 20 Mensajes</h3><table><thead><tr><th>Fecha</th><th>Hora</th><th>Usuario</th><th>Mensaje</th><th>Categoría</th></tr></thead><tbody>'+cl.slice(-20).reverse().map(r=>'<tr><td>'+(r.Fecha||r.fecha||'-')+'</td><td>'+(r.Hora||r.hora||'-')+'</td><td style="color:var(--text1);font-weight:500">'+(r.Usuario||r.usuario||'-')+'</td><td style="max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.msg||'-').substring(0,80)+'</td><td><span class="tag tag-'+r.cat.key+'">'+r.cat.label+'</span>'+(r.esc?' <span class="tag tag-escalar">Escalar</span>':'')+'</td></tr>').join('')+'</tbody></table></div>'+
-'<div class="footer">Dashboard por <a href="#">Savia Digital</a> · Datos en tiempo real · Última carga: '+new Date().toLocaleString('es-CL')+'</div>'}
-async function loadData(){try{const r=await fetch(SHEET_CSV);if(!r.ok)throw new Error('HTTP '+r.status);allRows=parseCSV(await r.text());render(filterByPeriod(allRows,currentPeriod))}catch(e){document.getElementById('content').innerHTML='<div class="error-box"><p>No se pudo cargar el Google Sheet</p><p style="font-size:.85rem;opacity:.8">Verifica que esté publicado (File > Share > Publish to web > CSV)</p><p style="font-size:.75rem;opacity:.6">'+e.message+'</p></div>'}}
-loadData();setInterval(loadData,300000);
+
+  <div class="header">
+    <div class="brand">
+      <div class="brand-icon"><svg viewBox="0 0 120 60" width="44" height="22" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="60" fill="#000"/><rect x="3" y="3" width="114" height="54" fill="none" stroke="#fff" stroke-width="3"/><text x="60" y="40" text-anchor="middle" fill="#fff" font-family="'Helvetica Neue',Arial,sans-serif" font-size="28" font-weight="600" letter-spacing="6">ARCA</text></svg></div>
+      <div>
+        <h1>Arca <span>Bar</span> — Bot IA</h1>
+        <div class="brand-sub">Dashboard de KPIs en tiempo real</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+      <div class="status"><span class="live-dot"></span> Conectado a Google Sheets</div>
+      <div class="period-bar">
+        <button class="period-btn active" onclick="setPeriod(7)">7 días</button>
+        <button class="period-btn" onclick="setPeriod(30)">30 días</button>
+        <button class="period-btn" onclick="setPeriod(0)">Todo</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="loading"><div class="spinner"></div>Cargando datos desde Google Sheets…</div>
+  </div>
+
+</div>
+
+<script>
+const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTGPhTHXLAXxW5k7mjqSPBwVAz4jLfTbGrX3--NL5THclo1ml8yLGwf4zTAH8RDdKoxy8taNUHNHG5l/pub?output=csv';
+
+// Category classification by keywords
+const CATEGORIES = [
+  { key: 'reserva',  label: 'Reservas',        color: '#22c55e', keywords: ['reserv','mesa','disponibilidad','book','tabla','personas','pax','lista de espera','waiting'] },
+  { key: 'horario',  label: 'Horarios',         color: '#3b82f6', keywords: ['horario','hora','abierto','abre','abren','funcionan','atienden','cerrado','cierra','cuando'] },
+  { key: 'menu',     label: 'Menú / Carta',     color: '#a855f7', keywords: ['menu','carta','plato','comida','almuerzo','comer','vegano','vegetarian','sin gluten','celiac','precio','cuesta','valen'] },
+  { key: 'evento',   label: 'Eventos / Grupos', color: '#06b6d4', keywords: ['evento','grupo','cumpleaño','fiesta','celebr','corporate','empresa','privado','capacidad'] },
+  { key: 'trabajo',  label: 'Trabajo / CV',     color: '#f59e0b', keywords: ['trabaj','empleo','cv','curriculum','postul','vacante','puesto'] },
+  { key: 'ubicacion',label: 'Ubicación',        color: '#ec4899', keywords: ['donde','dirección','direccion','ubicación','ubicacion','llegar','metro','estacion','mapa','calle'] },
+  { key: 'otro',     label: 'Otros',            color: '#5a6478', keywords: [] }
+];
+
+const ESCALATION_KEYWORDS = ['escalar','reclamo','queja','malo','pésimo','horrible','asco','problema','no funciona','error'];
+
+let allRows = [];
+let currentPeriod = 7;
+
+function classify(msg) {
+  const m = msg.toLowerCase();
+  for (const cat of CATEGORIES) {
+    if (cat.key === 'otro') continue;
+    if (cat.keywords.some(k => m.includes(k))) return cat;
+  }
+  return CATEGORIES.find(c => c.key === 'otro');
+}
+
+function isEscalation(msg) {
+  const m = msg.toLowerCase();
+  return ESCALATION_KEYWORDS.some(k => m.includes(k));
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
+  return lines.slice(1).map(line => {
+    // Handle CSV with quotes
+    const vals = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQuotes = !inQuotes; continue; }
+      if (line[i] === ',' && !inQuotes) { vals.push(current.trim()); current = ''; continue; }
+      current += line[i];
+    }
+    vals.push(current.trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = vals[i] || '');
+    return obj;
+  });
+}
+
+function filterByPeriod(rows, days) {
+  if (days === 0) return rows;
+  const now = new Date();
+  const cutoff = new Date(now.getTime() - days * 86400000);
+  return rows.filter(r => {
+    const d = parseDate(r);
+    return d && d >= cutoff;
+  });
+}
+
+function parseDate(row) {
+  const f = row['Fecha'] || row['fecha'] || '';
+  if (!f) return null;
+  // Try DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD formats
+  let parts;
+  if (f.includes('/')) { parts = f.split('/'); return new Date(parts[2], parts[1]-1, parts[0]); }
+  if (f.match(/^\d{4}-/)) return new Date(f);
+  if (f.includes('-')) { parts = f.split('-'); return new Date(parts[2], parts[1]-1, parts[0]); }
+  return new Date(f);
+}
+
+function setPeriod(days) {
+  currentPeriod = days;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  render(filterByPeriod(allRows, days));
+}
+
+function render(rows) {
+  const el = document.getElementById('content');
+  if (!rows.length) {
+    el.innerHTML = '<div class="error-box">No hay datos para el período seleccionado.</div>';
+    return;
+  }
+
+  // Classify each row — prefer sheet's own Categoría if present
+  const catKeyMap = { 'RESERVAS':'reserva','HORARIOS':'horario','CARTA':'menu','MENU':'menu','UBICACION':'ubicacion','UBICACIÓN':'ubicacion','EVENTOS':'evento','TRABAJO':'trabajo','RECLAMO':'escalar','GENERAL':'otro' };
+  const classified = rows.map(r => {
+    const msg = r['Mensaje'] || r['mensaje'] || '';
+    const resp = r['Respuesta'] || r['respuesta'] || '';
+    const sheetCat = (r['Categoría'] || r['Categoria'] || r['categoria'] || '').trim().toUpperCase();
+    const catKey = catKeyMap[sheetCat] || null;
+    const cat = catKey ? (CATEGORIES.find(c => c.key === catKey) || classify(msg)) : classify(msg);
+    return { ...r, category: cat, escalated: isEscalation(msg), msg, resp };
+  });
+
+  // KPIs
+  const totalMsgs = classified.length;
+  const uniqueUsers = new Set(classified.map(r => (r['Usuario'] || r['usuario'] || '').toLowerCase())).size;
+  const escalated = classified.filter(r => r.escalated).length;
+  const escalationRate = totalMsgs > 0 ? ((escalated / totalMsgs) * 100).toFixed(1) : '0';
+  const resolutionRate = totalMsgs > 0 ? (((totalMsgs - escalated) / totalMsgs) * 100).toFixed(1) : '0';
+  const costPerMsg = 0.003; // GPT-4o-mini ~$0.003 per interaction
+  const totalCost = (totalMsgs * costPerMsg).toFixed(2);
+
+  // Category counts
+  const catCounts = {};
+  CATEGORIES.forEach(c => catCounts[c.key] = 0);
+  classified.forEach(r => catCounts[r.category.key]++);
+
+  // Daily volume for bar chart
+  const dailyMap = {};
+  classified.forEach(r => {
+    const d = parseDate(r);
+    if (!d) return;
+    const key = d.toISOString().slice(0,10);
+    dailyMap[key] = (dailyMap[key] || 0) + 1;
+  });
+  const dailyKeys = Object.keys(dailyMap).sort();
+  const maxDaily = Math.max(...Object.values(dailyMap), 1);
+
+  // Build HTML
+  el.innerHTML = `
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:var(--blue-bg);color:var(--blue)">💬</div>
+        <div class="kpi-label">Total Mensajes</div>
+        <div class="kpi-value">${totalMsgs}</div>
+        <div class="kpi-sub">${uniqueUsers} usuarios únicos</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon" style="background:var(--green-bg);color:var(--green)">✅</div>
+        <div class="kpi-label">Tasa Resolución IA</div>
+        <div class="kpi-value">${resolutionRate}%</div>
+        <div class="kpi-sub">${totalMsgs - escalated} resueltos sin humano</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon" style="background:var(--red-bg);color:var(--red)">🚨</div>
+        <div class="kpi-label">Escalaciones</div>
+        <div class="kpi-value">${escalated}</div>
+        <div class="kpi-sub">${escalationRate}% del total</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon" style="background:var(--amber-bg);color:var(--amber)">💰</div>
+        <div class="kpi-label">Costo Estimado IA</div>
+        <div class="kpi-value">$${totalCost}</div>
+        <div class="kpi-sub">~$${costPerMsg.toFixed(3)} USD/msg (GPT-4o-mini)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon" style="background:var(--purple-bg);color:var(--purple)">📊</div>
+        <div class="kpi-label">Promedio Diario</div>
+        <div class="kpi-value">${dailyKeys.length > 0 ? (totalMsgs / dailyKeys.length).toFixed(1) : '0'}</div>
+        <div class="kpi-sub">mensajes/día (${dailyKeys.length} días con data)</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title"><span class="dot" style="background:var(--amber)"></span> Volumen Diario</div>
+        <div class="bar-chart" id="barChart">
+          ${dailyKeys.map(k => {
+            const h = (dailyMap[k] / maxDaily) * 160;
+            const label = k.slice(5); // MM-DD
+            return `<div class="bar-col">
+              <div style="font-size:.65rem;color:var(--text2);margin-bottom:2px">${dailyMap[k]}</div>
+              <div class="bar" style="height:${h}px;background:linear-gradient(180deg,var(--amber),#d97706)"></div>
+              <div style="font-size:.6rem;color:var(--text3);margin-top:4px;white-space:nowrap">${label}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><span class="dot" style="background:var(--purple)"></span> Categorías</div>
+        <div class="cat-list">
+          ${CATEGORIES.filter(c => catCounts[c.key] > 0).sort((a,b) => catCounts[b.key] - catCounts[a.key]).map(c => {
+            const pct = ((catCounts[c.key] / totalMsgs) * 100).toFixed(0);
+            return `<div class="cat-item">
+              <div class="cat-dot" style="background:${c.color}"></div>
+              <div class="cat-name">${c.label}</div>
+              <div class="cat-count">${catCounts[c.key]}</div>
+              <div class="cat-pct">${pct}%</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Messages Table -->
+    <div class="table-card">
+      <h3>Últimas 20 Conversaciones</h3>
+      <table>
+        <thead><tr><th style="width:90px">Fecha</th><th style="width:70px">Hora</th><th style="width:110px">Usuario</th><th>Conversación</th><th style="width:130px">Categoría</th></tr></thead>
+        <tbody>
+          ${classified.slice(-20).reverse().map(r => {
+            const tagClass = 'tag-' + r.category.key;
+            const msgShort = (r.msg || '').substring(0, 160);
+            const respShort = (r.resp || '').substring(0, 200);
+            return `<tr>
+              <td>${r['Fecha'] || r['fecha'] || '-'}</td>
+              <td>${r['Hora'] || r['hora'] || '-'}</td>
+              <td style="color:var(--text1);font-weight:500;vertical-align:top">${r['Usuario'] || r['usuario'] || '-'}</td>
+              <td>
+                <div class="conv-cell">
+                  ${msgShort ? `<div><div class="bubble-label">Cliente</div><div class="bubble bubble-user">${msgShort}${r.msg.length > 160 ? '…' : ''}</div></div>` : ''}
+                  ${respShort ? `<div><div class="bubble-label">Bot IA</div><div class="bubble bubble-bot">${respShort}${r.resp.length > 200 ? '…' : ''}</div></div>` : ''}
+                </div>
+              </td>
+              <td style="vertical-align:top"><span class="tag ${tagClass}">${r.category.label}</span>${r.escalated ? '<br><span class="tag tag-escalar" style="margin-top:4px;display:inline-block">Escalar</span>' : ''}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      Dashboard generado por <a href="#">Savia Digital</a> · Datos en tiempo real desde Google Sheets · Última carga: ${new Date().toLocaleString('es-CL')}
+    </div>
+  `;
+}
+
+// Fetch data
+async function loadData() {
+  try {
+    const resp = await fetch(SHEET_CSV);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const text = await resp.text();
+    allRows = parseCSV(text);
+    render(filterByPeriod(allRows, currentPeriod));
+  } catch (err) {
+    document.getElementById('content').innerHTML = `
+      <div class="error-box">
+        <p style="font-size:1.1rem;margin-bottom:.5rem">⚠️ No se pudo cargar el Google Sheet</p>
+        <p style="font-size:.85rem;opacity:.8">Verifica que el Sheet esté publicado en web (File → Share → Publish to web → CSV).</p>
+        <p style="font-size:.75rem;margin-top:.5rem;opacity:.6">Error: ${err.message}</p>
+      </div>`;
+  }
+}
+
+loadData();
+// Refresh every 5 minutes
+setInterval(loadData, 300000);
 </script>
 </body>
 </html>
