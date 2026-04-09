@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arca Bar — Bot IA Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0f14;--surface:#141820;--surface2:#1a1f2a;--border:#252b38;--text1:#e8ecf4;--text2:#8892a4;--text3:#5a6478;--amber:#f59e0b;--amber-bg:#f59e0b18;--green:#22c55e;--green-bg:#22c55e18;--red:#ef4444;--red-bg:#ef444418;--blue:#3b82f6;--blue-bg:#3b82f618;--purple:#a855f7;--purple-bg:#a855f718;--cyan:#06b6d4;--cyan-bg:#06b6d418;--accent:#f59e0b}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;overflow-x:hidden}
+.container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
+.brand{display:flex;align-items:center;gap:1rem}
+.brand-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--amber),#d97706);display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 20px #f59e0b33}
+.brand h1{font-family:'Instrument Serif',serif;font-size:1.8rem;letter-spacing:-0.02em}
+.brand h1 span{color:var(--amber)}
+.brand-sub{font-size:.78rem;color:var(--text2);margin-top:2px}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.status{font-size:.8rem;color:var(--text2);display:flex;align-items:center}
+.period-bar{display:flex;gap:.5rem;background:var(--surface);border-radius:10px;padding:4px;border:1px solid var(--border)}
+.period-btn{padding:.45rem 1rem;border-radius:8px;border:none;background:transparent;color:var(--text2);font-size:.8rem;font-family:inherit;cursor:pointer;transition:.2s}
+.period-btn.active{background:var(--amber);color:#000;font-weight:700}
+.period-btn:hover:not(.active){color:var(--text1);background:var(--surface2)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi:hover{border-color:var(--amber)}
+.kpi-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:.6rem}
+.kpi-value{font-family:'Instrument Serif',serif;font-size:2.2rem;line-height:1;margin-bottom:.3rem}
+.kpi-sub{font-size:.75rem;color:var(--text3)}
+.kpi-icon{position:absolute;top:1rem;right:1rem;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:2rem}
+@media(max-width:768px){.charts-row{grid-template-columns:1fr}}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem}
+.chart-title{font-size:.85rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+.chart-title .dot{width:8px;height:8px;border-radius:50%}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:180px;padding-top:1rem}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px}
+.bar{border-radius:4px 4px 0 0;width:100%;min-height:4px;transition:height .6s ease}
+.cat-list{display:flex;flex-direction:column;gap:.7rem}
+.cat-item{display:flex;align-items:center;gap:.7rem}
+.cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cat-name{font-size:.82rem;flex:1;color:var(--text2)}
+.cat-count{font-size:.85rem;font-weight:700}
+.cat-pct{font-size:.72rem;color:var(--text3);min-width:36px;text-align:right}
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;overflow-x:auto}
+.table-card h3{font-size:.85rem;font-weight:700;margin-bottom:1rem}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{text-align:left;padding:.6rem .8rem;color:var(--text2);font-weight:500;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
+td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--text2)}
+tr:hover td{color:var(--text1);background:var(--surface2)}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:500}
+.tag-reserva{background:var(--green-bg);color:var(--green)}
+.tag-horario{background:var(--blue-bg);color:var(--blue)}
+.tag-menu{background:var(--purple-bg);color:var(--purple)}
+.tag-evento{background:var(--cyan-bg);color:var(--cyan)}
+.tag-trabajo{background:var(--amber-bg);color:var(--amber)}
+.tag-escalar{background:var(--red-bg);color:var(--red)}
+.tag-otro{background:#ffffff0a;color:var(--text3)}
+.footer{text-align:center;padding:2rem 0;color:var(--text3);font-size:.72rem}
+.footer a{color:var(--amber);text-decoration:none}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:1rem;color:var(--text2)}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-box{background:var(--red-bg);border:1px solid #ef444444;border-radius:12px;padding:1.5rem;text-align:center;color:var(--red)}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="brand"><div class="brand-icon">🤖</div><div><h1>Arca <span>Bar</span> — Bot IA</h1><div class="brand-sub">Dashboard de KPIs en tiempo real</div></div></div>
+<div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+<div class="status"><span class="live-dot"></span> Conectado a Google Sheets</div>
+<div class="period-bar">
+<button class="period-btn active" onclick="setPeriod(7)">7 días</button>
+<button class="period-btn" onclick="setPeriod(30)">30 días</button>
+<button class="period-btn" onclick="setPeriod(0)">Todo</button>
+</div></div></div>
+<div id="content"><div class="loading"><div class="spinner"></div>Cargando datos desde Google Sheets…</div></div>
+</div><script>
+const SHEET_CSV='https://docs.google.com/spreadsheets/d/11Qc6DClg-lue7GjFjn0tqDtX25fFWhpwygfP8-f_EeA/pub?gid=0&single=true&output=csv';
+const CATEGORIES=[{key:'reserva',label:'Reservas',color:'#22c55e',keywords:['reserv','mesa','disponibilidad','book','personas','pax']},{key:'horario',label:'Horarios',color:'#3b82f6',keywords:['horario','hora','abierto','abre','abren','funcionan','atienden','cerrado','cierra','cuando']},{key:'menu',label:'Menú / Carta',color:'#a855f7',keywords:['menu','carta','plato','comida','almuerzo','comer','vegano','vegetarian','sin gluten','precio','cuesta','valen']},{key:'evento',label:'Eventos / Grupos',color:'#06b6d4',keywords:['evento','grupo','cumpleaño','fiesta','celebr','corporate','empresa','privado','capacidad']},{key:'trabajo',label:'Trabajo / CV',color:'#f59e0b',keywords:['trabaj','empleo','cv','curriculum','postul','vacante','puesto']},{key:'ubicacion',label:'Ubicación',color:'#ec4899',keywords:['donde','dirección','direccion','ubicación','ubicacion','llegar','metro','estacion','mapa','calle']},{key:'otro',label:'Otros',color:'#5a6478',keywords:[]}];
+const ESC_KW=['escalar','reclamo','queja','malo','pésimo','horrible','asco','problema','no funciona','error'];
+let allRows=[],currentPeriod=7;
+function classify(msg){const m=msg.toLowerCase();for(const cat of CATEGORIES){if(cat.key==='otro')continue;if(cat.keywords.some(k=>m.includes(k)))return cat}return CATEGORIES.find(c=>c.key==='otro')}
+function isEsc(msg){return ESC_KW.some(k=>msg.toLowerCase().includes(k))}
+function parseCSV(text){const lines=text.trim().split('\n');if(lines.length<2)return[];const hdr=lines[0].split(',').map(h=>h.replace(/"/g,'').trim());return lines.slice(1).map(line=>{const v=[];let c='',q=false;for(let i=0;i<line.length;i++){if(line[i]==='"'){q=!q;continue}if(line[i]===','&&!q){v.push(c.trim());c='';continue}c+=line[i]}v.push(c.trim());const o={};hdr.forEach((h,i)=>o[h]=v[i]||'');return o})}
+function filterByPeriod(rows,days){if(days===0)return rows;const cut=new Date(Date.now()-days*864e5);return rows.filter(r=>{const d=pDate(r);return d&&d>=cut})}
+function pDate(row){const f=row.Fecha||row.fecha||'';if(!f)return null;if(f.includes('/')){const p=f.split('/');return new Date(p[2],p[1]-1,p[0])}if(f.match(/^\d{4}-/))return new Date(f);if(f.includes('-')){const p=f.split('-');return new Date(p[2],p[1]-1,p[0])}return new Date(f)}
+function setPeriod(days){currentPeriod=days;document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');render(filterByPeriod(allRows,days))}
+function render(rows){const el=document.getElementById('content');if(!rows.length){el.innerHTML='<div class="error-box">No hay datos para el período seleccionado.</div>';return}
+const cl=rows.map(r=>{const msg=r.Mensaje||r.mensaje||'';return{...r,cat:classify(msg),esc:isEsc(msg),msg}});
+const tot=cl.length,uniq=new Set(cl.map(r=>(r.Usuario||r.usuario||'').toLowerCase())).size;
+const esc=cl.filter(r=>r.esc).length,escR=tot>0?((esc/tot)*100).toFixed(1):'0',resR=tot>0?(((tot-esc)/tot)*100).toFixed(1):'0';
+const cpm=0.003,cost=(tot*cpm).toFixed(2);
+const cc={};CATEGORIES.forEach(c=>cc[c.key]=0);cl.forEach(r=>cc[r.cat.key]++);
+const dm={};cl.forEach(r=>{const d=pDate(r);if(!d)return;const k=d.toISOString().slice(0,10);dm[k]=(dm[k]||0)+1});
+const dk=Object.keys(dm).sort(),mx=Math.max(...Object.values(dm),1);
+el.innerHTML='<div class="kpi-grid">'+
+'<div class="kpi"><div class="kpi-icon" style="background:var(--blue-bg);color:var(--blue)">💬</div><div class="kpi-label">Total Mensajes</div><div class="kpi-value">'+tot+'</div><div class="kpi-sub">'+uniq+' usuarios únicos</div></div>'+
+'<div class="kpi"><div class="kpi-icon" style="background:var(--green-bg);color:var(--green)">✅</div><div class="kpi-label">Tasa Resolución IA</div><div class="kpi-value">'+resR+'%</div><div class="kpi-sub">'+(tot-esc)+' resueltos sin humano</div></div>'+
+'<div class="kpi"><div class="kpi-icon" style="background:var(--red-bg);color:var(--red)">🚨</div><div class="kpi-label">Escalaciones</div><div class="kpi-value">'+esc+'</div><div class="kpi-sub">'+escR+'% del total</div></div>'+
+'<div class="kpi"><div class="kpi-icon" style="background:var(--amber-bg);color:var(--amber)">💰</div><div class="kpi-label">Costo Estimado IA</div><div class="kpi-value">$'+cost+'</div><div class="kpi-sub">~$'+cpm.toFixed(3)+' USD/msg (GPT-4o-mini)</div></div>'+
+'<div class="kpi"><div class="kpi-icon" style="background:var(--purple-bg);color:var(--purple)">📊</div><div class="kpi-label">Promedio Diario</div><div class="kpi-value">'+(dk.length>0?(tot/dk.length).toFixed(1):'0')+'</div><div class="kpi-sub">mensajes/día ('+dk.length+' días con data)</div></div>'+
+'</div><div class="charts-row"><div class="chart-card"><div class="chart-title"><span class="dot" style="background:var(--amber)"></span> Volumen Diario</div><div class="bar-chart">'+dk.map(k=>'<div class="bar-col"><div style="font-size:.65rem;color:var(--text2)">'+dm[k]+'</div><div class="bar" style="height:'+(dm[k]/mx*160)+'px;background:linear-gradient(180deg,var(--amber),#d97706)"></div><div style="font-size:.6rem;color:var(--text3);margin-top:4px">'+k.slice(5)+'</div></div>').join('')+'</div></div>'+
+'<div class="chart-card"><div class="chart-title"><span class="dot" style="background:var(--purple)"></span> Categorías</div><div class="cat-list">'+CATEGORIES.filter(c=>cc[c.key]>0).sort((a,b)=>cc[b.key]-cc[a.key]).map(c=>'<div class="cat-item"><div class="cat-dot" style="background:'+c.color+'"></div><div class="cat-name">'+c.label+'</div><div class="cat-count">'+cc[c.key]+'</div><div class="cat-pct">'+((cc[c.key]/tot)*100).toFixed(0)+'%</div></div>').join('')+'</div></div></div>'+
+'<div class="table-card"><h3>Últimos 20 Mensajes</h3><table><thead><tr><th>Fecha</th><th>Hora</th><th>Usuario</th><th>Mensaje</th><th>Categoría</th></tr></thead><tbody>'+cl.slice(-20).reverse().map(r=>'<tr><td>'+(r.Fecha||r.fecha||'-')+'</td><td>'+(r.Hora||r.hora||'-')+'</td><td style="color:var(--text1);font-weight:500">'+(r.Usuario||r.usuario||'-')+'</td><td style="max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.msg||'-').substring(0,80)+'</td><td><span class="tag tag-'+r.cat.key+'">'+r.cat.label+'</span>'+(r.esc?' <span class="tag tag-escalar">Escalar</span>':'')+'</td></tr>').join('')+'</tbody></table></div>'+
+'<div class="footer">Dashboard por <a href="#">Savia Digital</a> · Datos en tiempo real · Última carga: '+new Date().toLocaleString('es-CL')+'</div>'}
+async function loadData(){try{const r=await fetch(SHEET_CSV);if(!r.ok)throw new Error('HTTP '+r.status);allRows=parseCSV(await r.text());render(filterByPeriod(allRows,currentPeriod))}catch(e){document.getElementById('content').innerHTML='<div class="error-box"><p>No se pudo cargar el Google Sheet</p><p style="font-size:.85rem;opacity:.8">Verifica que esté publicado (File > Share > Publish to web > CSV)</p><p style="font-size:.75rem;opacity:.6">'+e.message+'</p></div>'}}
+loadData();setInterval(loadData,300000);
+</script>
+</body>
+</html>
