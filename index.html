@@ -79,7 +79,7 @@ tr:hover td{color:var(--text1);background:var(--surface2)}
 </div></div></div>
 <div id="content"><div class="loading"><div class="spinner"></div>Cargando datos desde Google Sheets…</div></div>
 </div><script>
-const SHEET_CSV='https://docs.google.com/spreadsheets/d/11Qc6DClg-lue7GjFjn0tqDtX25fFWhpwygfP8-f_EeA/pub?gid=0&single=true&output=csv';
+const SHEET_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vTGPhTHXLAXxW5k7mjqSPBwVAz4jLfTbGrX3--NL5THclo1ml8yLGwf4zTAH8RDdKoxy8taNUHNHG5l/pub?output=csv';
 const CATEGORIES=[{key:'reserva',label:'Reservas',color:'#22c55e',keywords:['reserv','mesa','disponibilidad','book','personas','pax']},{key:'horario',label:'Horarios',color:'#3b82f6',keywords:['horario','hora','abierto','abre','abren','funcionan','atienden','cerrado','cierra','cuando']},{key:'menu',label:'Menú / Carta',color:'#a855f7',keywords:['menu','carta','plato','comida','almuerzo','comer','vegano','vegetarian','sin gluten','precio','cuesta','valen']},{key:'evento',label:'Eventos / Grupos',color:'#06b6d4',keywords:['evento','grupo','cumpleaño','fiesta','celebr','corporate','empresa','privado','capacidad']},{key:'trabajo',label:'Trabajo / CV',color:'#f59e0b',keywords:['trabaj','empleo','cv','curriculum','postul','vacante','puesto']},{key:'ubicacion',label:'Ubicación',color:'#ec4899',keywords:['donde','dirección','direccion','ubicación','ubicacion','llegar','metro','estacion','mapa','calle']},{key:'otro',label:'Otros',color:'#5a6478',keywords:[]}];
 const ESC_KW=['escalar','reclamo','queja','malo','pésimo','horrible','asco','problema','no funciona','error'];
 let allRows=[],currentPeriod=7;
