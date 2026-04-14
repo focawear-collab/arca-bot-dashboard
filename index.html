@@ -3,20 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arca Bar — Bot IA Dashboard</title>
+<title>Grupo Arca — Bot IA Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#0c0f14;--surface:#141820;--surface2:#1a1f2a;--border:#252b38;
   --text1:#e8ecf4;--text2:#8892a4;--text3:#5a6478;
-  --amber:#f59e0b;--amber-bg:#f59e0b18;
   --green:#22c55e;--green-bg:#22c55e18;
   --red:#ef4444;--red-bg:#ef444418;
   --blue:#3b82f6;--blue-bg:#3b82f618;
   --purple:#a855f7;--purple-bg:#a855f718;
   --cyan:#06b6d4;--cyan-bg:#06b6d418;
-  --accent:#f59e0b;
+  --pink:#ec4899;--pink-bg:#ec489918;
+  --orange:#f97316;--orange-bg:#f9731618;
+  /* Dynamic accent — overridden by JS */
+  --accent:#f59e0b;--accent-bg:#f59e0b18;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;overflow-x:hidden}
 .grain{position:fixed;inset:0;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -24,45 +26,49 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text1);mi
 .container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
 
 /* Header */
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
+.header{margin-bottom:1.5rem}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem}
 .brand{display:flex;align-items:center;gap:1rem}
 .brand-icon{width:48px;height:48px;border-radius:6px;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.4)}
-.brand h1{font-family:'Instrument Serif',serif;font-size:1.8rem;letter-spacing:-0.02em}
-.brand h1 span{color:var(--amber)}
+.brand h1{font-family:'Instrument Serif',serif;font-size:1.7rem;letter-spacing:-0.02em}
+.brand h1 span{color:var(--accent);transition:color .3s}
 .brand-sub{font-size:.78rem;color:var(--text2);margin-top:2px}
 .live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.status-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
 .status{font-size:.8rem;color:var(--text2);display:flex;align-items:center}
-
-/* Period selector */
 .period-bar{display:flex;gap:.5rem;background:var(--surface);border-radius:10px;padding:4px;border:1px solid var(--border)}
 .period-btn{padding:.45rem 1rem;border-radius:8px;border:none;background:transparent;color:var(--text2);font-size:.8rem;font-family:inherit;cursor:pointer;transition:.2s}
-.period-btn.active{background:var(--amber);color:#000;font-weight:700}
+.period-btn.active{background:var(--accent);color:#000;font-weight:700}
 .period-btn:hover:not(.active){color:var(--text1);background:var(--surface2)}
 
-/* KPI Cards Row */
+/* Restaurant tabs */
+.tab-bar{display:flex;gap:.5rem;background:var(--surface);border-radius:12px;padding:5px;border:1px solid var(--border);margin-bottom:2rem}
+.tab-btn{flex:1;padding:.6rem 1.2rem;border-radius:9px;border:none;background:transparent;color:var(--text2);font-size:.875rem;font-weight:500;font-family:inherit;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.tab-btn.active{background:var(--accent);color:#000;font-weight:700;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.tab-btn:hover:not(.active){color:var(--text1);background:var(--surface2)}
+.tab-dot{width:8px;height:8px;border-radius:50%}
+.tab-btn.active .tab-dot{background:#000}
+.tab-btn:not(.active) .tab-dot{background:var(--accent)}
+
+/* KPI Cards */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;position:relative;overflow:hidden;transition:border-color .2s}
-.kpi:hover{border-color:var(--amber)}
+.kpi:hover{border-color:var(--accent)}
 .kpi-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:.6rem}
 .kpi-value{font-family:'Instrument Serif',serif;font-size:2.2rem;line-height:1;margin-bottom:.3rem}
 .kpi-sub{font-size:.75rem;color:var(--text3)}
 .kpi-icon{position:absolute;top:1rem;right:1rem;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem}
 
-/* Charts area */
+/* Charts */
 .charts-row{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:2rem}
 @media(max-width:768px){.charts-row{grid-template-columns:1fr}}
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem}
 .chart-title{font-size:.85rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
 .chart-title .dot{width:8px;height:8px;border-radius:50%}
-
-/* Bar chart */
 .bar-chart{display:flex;align-items:flex-end;gap:6px;height:180px;padding-top:1rem}
 .bar-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px}
 .bar{border-radius:4px 4px 0 0;width:100%;min-height:4px;transition:height .6s ease}
-.bar-label{font-size:.6rem;color:var(--text3);writing-mode:vertical-rl;transform:rotate(180deg);max-height:60px;overflow:hidden;text-overflow:ellipsis}
-
-/* Donut / category list */
 .cat-list{display:flex;flex-direction:column;gap:.7rem}
 .cat-item{display:flex;align-items:center;gap:.7rem}
 .cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -78,33 +84,36 @@ th{text-align:left;padding:.6rem .8rem;color:var(--text2);font-weight:500;font-s
 td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--text2)}
 tr:hover td{color:var(--text1);background:var(--surface2)}
 .tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:500}
-.tag-reserva{background:var(--green-bg);color:var(--green)}
-.tag-horario{background:var(--blue-bg);color:var(--blue)}
-.tag-menu{background:var(--purple-bg);color:var(--purple)}
-.tag-evento{background:var(--cyan-bg);color:var(--cyan)}
-.tag-trabajo{background:var(--amber-bg);color:var(--amber)}
-.tag-escalar{background:var(--red-bg);color:var(--red)}
+.tag-reservas,.tag-reserva{background:var(--green-bg);color:var(--green)}
+.tag-horarios,.tag-horario{background:var(--blue-bg);color:var(--blue)}
+.tag-carta,.tag-menu{background:var(--purple-bg);color:var(--purple)}
+.tag-eventos,.tag-evento{background:var(--cyan-bg);color:var(--cyan)}
+.tag-trabajo{background:#f59e0b18;color:#f59e0b}
+.tag-ubicacion{background:var(--pink-bg);color:var(--pink)}
+.tag-dietario{background:var(--green-bg);color:var(--green)}
+.tag-canje{background:var(--purple-bg);color:var(--purple)}
+.tag-delivery{background:#64748b18;color:#94a3b8}
+.tag-factura{background:var(--orange-bg);color:var(--orange)}
+.tag-reclamo,.tag-escalar{background:var(--red-bg);color:var(--red)}
 .tag-otro{background:#ffffff0a;color:var(--text3)}
 
-/* Footer */
-.footer{text-align:center;padding:2rem 0;color:var(--text3);font-size:.72rem}
-.footer a{color:var(--amber);text-decoration:none}
-
-/* Loading */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:1rem;color:var(--text2)}
-.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Error */
-.error-box{background:var(--red-bg);border:1px solid #ef444444;border-radius:12px;padding:1.5rem;text-align:center;color:var(--red)}
-
-/* Chat bubbles */
+/* Bubbles */
 .conv-cell{display:flex;flex-direction:column;gap:.45rem;padding:.2rem 0}
 .bubble{padding:.45rem .7rem;border-radius:10px;font-size:.78rem;line-height:1.45;max-width:100%;word-break:break-word}
 .bubble-user{background:var(--surface2);color:var(--text2);border-bottom-left-radius:3px}
-.bubble-bot{background:#f59e0b14;border:1px solid #f59e0b22;color:var(--text1);border-bottom-left-radius:3px}
+.bubble-bot{background:var(--accent-bg);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);color:var(--text1);border-bottom-left-radius:3px;transition:background .3s,border-color .3s}
 .bubble-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px}
-.bubble-bot .bubble-label{color:#f59e0b99}
+.bubble-bot .bubble-label{color:color-mix(in srgb,var(--accent) 60%,transparent);transition:color .3s}
+
+/* Footer */
+.footer{text-align:center;padding:2rem 0;color:var(--text3);font-size:.72rem}
+.footer a{color:var(--accent);text-decoration:none;transition:color .3s}
+
+/* Loading / Error */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:1rem;color:var(--text2)}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;transition:border-top-color .3s}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-box{background:var(--red-bg);border:1px solid #ef444444;border-radius:12px;padding:1.5rem;text-align:center;color:var(--red)}
 </style>
 </head>
 <body>
@@ -112,202 +121,263 @@ tr:hover td{color:var(--text1);background:var(--surface2)}
 <div class="container">
 
   <div class="header">
-    <div class="brand">
-      <div class="brand-icon"><svg viewBox="0 0 120 60" width="44" height="22" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="60" fill="#000"/><rect x="3" y="3" width="114" height="54" fill="none" stroke="#fff" stroke-width="3"/><text x="60" y="40" text-anchor="middle" fill="#fff" font-family="'Helvetica Neue',Arial,sans-serif" font-size="28" font-weight="600" letter-spacing="6">ARCA</text></svg></div>
-      <div>
-        <h1>Arca <span>Bar</span> — Bot IA</h1>
-        <div class="brand-sub">Dashboard de KPIs en tiempo real</div>
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 120 60" width="44" height="22" xmlns="http://www.w3.org/2000/svg">
+            <rect width="120" height="60" fill="#000"/>
+            <rect x="3" y="3" width="114" height="54" fill="none" stroke="#fff" stroke-width="3"/>
+            <text x="60" y="40" text-anchor="middle" fill="#fff" font-family="'Helvetica Neue',Arial,sans-serif" font-size="28" font-weight="600" letter-spacing="6">ARCA</text>
+          </svg>
+        </div>
+        <div>
+          <h1>Grupo <span id="brandName">Arca</span> — Bot IA</h1>
+          <div class="brand-sub">Dashboard de KPIs en tiempo real</div>
+        </div>
+      </div>
+      <div class="status-row">
+        <div class="status"><span class="live-dot"></span> Conectado a Google Sheets</div>
+        <div class="period-bar">
+          <button class="period-btn active" onclick="setPeriod(7,this)">7 días</button>
+          <button class="period-btn" onclick="setPeriod(30,this)">30 días</button>
+          <button class="period-btn" onclick="setPeriod(0,this)">Todo</button>
+        </div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
-      <div class="status"><span class="live-dot"></span> Conectado a Google Sheets</div>
-      <div class="period-bar">
-        <button class="period-btn active" onclick="setPeriod(7)">7 días</button>
-        <button class="period-btn" onclick="setPeriod(30)">30 días</button>
-        <button class="period-btn" onclick="setPeriod(0)">Todo</button>
-      </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-arca" onclick="switchRestaurant('arca')">
+        <span class="tab-dot"></span> Arca Bar
+      </button>
+      <button class="tab-btn" id="tab-savia" onclick="switchRestaurant('savia')">
+        <span class="tab-dot"></span> Savia
+      </button>
     </div>
   </div>
 
   <div id="content">
-    <div class="loading"><div class="spinner"></div>Cargando datos desde Google Sheets…</div>
+    <div class="loading"><div class="spinner"></div>Cargando datos…</div>
   </div>
 
 </div>
 
 <script>
-const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTGPhTHXLAXxW5k7mjqSPBwVAz4jLfTbGrX3--NL5THclo1ml8yLGwf4zTAH8RDdKoxy8taNUHNHG5l/pub?output=csv';
-
-// Category classification by keywords
-const CATEGORIES = [
-  { key: 'reserva',  label: 'Reservas',        color: '#22c55e', keywords: ['reserv','mesa','disponibilidad','book','tabla','personas','pax','lista de espera','waiting'] },
-  { key: 'horario',  label: 'Horarios',         color: '#3b82f6', keywords: ['horario','hora','abierto','abre','abren','funcionan','atienden','cerrado','cierra','cuando'] },
-  { key: 'menu',     label: 'Menú / Carta',     color: '#a855f7', keywords: ['menu','carta','plato','comida','almuerzo','comer','vegano','vegetarian','sin gluten','celiac','precio','cuesta','valen'] },
-  { key: 'evento',   label: 'Eventos / Grupos', color: '#06b6d4', keywords: ['evento','grupo','cumpleaño','fiesta','celebr','corporate','empresa','privado','capacidad'] },
-  { key: 'trabajo',  label: 'Trabajo / CV',     color: '#f59e0b', keywords: ['trabaj','empleo','cv','curriculum','postul','vacante','puesto'] },
-  { key: 'ubicacion',label: 'Ubicación',        color: '#ec4899', keywords: ['donde','dirección','direccion','ubicación','ubicacion','llegar','metro','estacion','mapa','calle'] },
-  { key: 'otro',     label: 'Otros',            color: '#5a6478', keywords: [] }
-];
-
-const ESCALATION_KEYWORDS = ['escalar','reclamo','queja','malo','pésimo','horrible','asco','problema','no funciona','error'];
-
-let allRows = [];
-let currentPeriod = 7;
-
-function classify(msg) {
-  const m = msg.toLowerCase();
-  for (const cat of CATEGORIES) {
-    if (cat.key === 'otro') continue;
-    if (cat.keywords.some(k => m.includes(k))) return cat;
+// ─── Config ───────────────────────────────────────────────
+const RESTAURANTS = {
+  arca: {
+    name: 'Arca Bar',
+    brandName: 'Arca',
+    accent: '#f59e0b',
+    accentBg: '#f59e0b18',
+    csv: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTGPhTHXLAXxW5k7mjqSPBwVAz4jLfTbGrX3--NL5THclo1ml8yLGwf4zTAH8RDdKoxy8taNUHNHG5l/pub?output=csv',
+    categories: [
+      { key:'reserva',   label:'Reservas',        color:'#22c55e', sheetKeys:['RESERVAS'],  keywords:['reserv','mesa','disponibilidad','personas','lista de espera'] },
+      { key:'horario',   label:'Horarios',         color:'#3b82f6', sheetKeys:['HORARIOS'],  keywords:['horario','hora','abierto','abren','cierran','cuando'] },
+      { key:'menu',      label:'Menú / Carta',     color:'#a855f7', sheetKeys:['CARTA','MENU'], keywords:['menu','carta','plato','comer','precio','almuerzo','vegano'] },
+      { key:'evento',    label:'Eventos / Grupos', color:'#06b6d4', sheetKeys:['EVENTOS'],  keywords:['evento','grupo','cumpleaño','fiesta','privado','capacidad'] },
+      { key:'trabajo',   label:'Trabajo / CV',     color:'#f59e0b', sheetKeys:['TRABAJO'],  keywords:['trabaj','empleo','cv','curriculum','postul'] },
+      { key:'ubicacion', label:'Ubicación',        color:'#ec4899', sheetKeys:['UBICACION'],keywords:['donde','dirección','ubicación','llegar','estacion','mapa'] },
+      { key:'reclamo',   label:'Reclamos',         color:'#ef4444', sheetKeys:['RECLAMO'],  keywords:['reclamo','queja','malo','problema','escalar'] },
+      { key:'otro',      label:'Otros',            color:'#5a6478', sheetKeys:['GENERAL'],  keywords:[] }
+    ]
+  },
+  savia: {
+    name: 'Savia',
+    brandName: 'Savia',
+    accent: '#10b981',
+    accentBg: '#10b98118',
+    csv: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSRAFWpd-rPoaI31dHKpQCXp0WiQMXNTF5h-DwpNP6CCwx6c0jnbynCTcq3uMzJlsESUOGIsCBjrpet/pub?gid=0&single=true&output=csv',
+    categories: [
+      { key:'reservas',  label:'Reservas',         color:'#22c55e', sheetKeys:['RESERVAS'],       keywords:['reserv','mesa','disponibilidad','personas','lista de espera'] },
+      { key:'horarios',  label:'Horarios',          color:'#3b82f6', sheetKeys:['HORARIOS'],       keywords:['horario','hora','abierto','abren','cuando'] },
+      { key:'carta',     label:'Carta / Menú',      color:'#a855f7', sheetKeys:['CARTA'],          keywords:['carta','menu','plato','precio','almuerzo','cocina','trago','vino'] },
+      { key:'eventos',   label:'Eventos / Grupos',  color:'#06b6d4', sheetKeys:['EVENTOS'],        keywords:['evento','grupo','cumpleaño','fiesta','privado','gift','giftcard'] },
+      { key:'dietario',  label:'Dietario / Pet',    color:'#22c55e', sheetKeys:['DIETARIO'],       keywords:['gluten','celiaco','vegano','vegetariano','nino','pet','perro'] },
+      { key:'ubicacion', label:'Ubicación',         color:'#ec4899', sheetKeys:['UBICACION'],      keywords:['donde','dirección','ubicación','llegar','estacion','mapa','estacionamiento'] },
+      { key:'canje',     label:'Canjes',            color:'#8b5cf6', sheetKeys:['CANJE'],          keywords:['canje','colaboracion','influencer'] },
+      { key:'delivery',  label:'Delivery',          color:'#94a3b8', sheetKeys:['DELIVERY'],       keywords:['delivery','despacho','rappi','uber'] },
+      { key:'reclamo',   label:'Reclamos',          color:'#ef4444', sheetKeys:['RECLAMO'],        keywords:['reclamo','queja','malo','problema','escalar'] },
+      { key:'otro',      label:'Otros',             color:'#5a6478', sheetKeys:['GENERAL','FACTURA','OBJETO_PERDIDO'], keywords:[] }
+    ]
   }
-  return CATEGORIES.find(c => c.key === 'otro');
+};
+
+// ─── State ───────────────────────────────────────────────
+let currentRestaurant = 'arca';
+let currentPeriod = 7;
+let allRows = { arca: null, savia: null };
+
+// ─── Theme ───────────────────────────────────────────────
+function applyTheme(rid) {
+  const r = RESTAURANTS[rid];
+  document.documentElement.style.setProperty('--accent', r.accent);
+  document.documentElement.style.setProperty('--accent-bg', r.accentBg);
+  document.getElementById('brandName').textContent = r.brandName;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + rid).classList.add('active');
 }
 
-function isEscalation(msg) {
-  const m = msg.toLowerCase();
-  return ESCALATION_KEYWORDS.some(k => m.includes(k));
+// ─── Switch restaurant ───────────────────────────────────
+async function switchRestaurant(rid) {
+  currentRestaurant = rid;
+  applyTheme(rid);
+  if (allRows[rid]) {
+    render(filterByPeriod(allRows[rid], currentPeriod), RESTAURANTS[rid]);
+  } else {
+    await loadData(rid);
+  }
 }
 
+// ─── Period ──────────────────────────────────────────────
+function setPeriod(days, btn) {
+  currentPeriod = days;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (allRows[currentRestaurant]) {
+    render(filterByPeriod(allRows[currentRestaurant], currentPeriod), RESTAURANTS[currentRestaurant]);
+  }
+}
+
+// ─── CSV Parser ──────────────────────────────────────────
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   if (lines.length < 2) return [];
   const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
   return lines.slice(1).map(line => {
-    // Handle CSV with quotes
     const vals = [];
-    let current = '';
-    let inQuotes = false;
+    let cur = '', inQ = false;
     for (let i = 0; i < line.length; i++) {
-      if (line[i] === '"') { inQuotes = !inQuotes; continue; }
-      if (line[i] === ',' && !inQuotes) { vals.push(current.trim()); current = ''; continue; }
-      current += line[i];
+      if (line[i] === '"') { inQ = !inQ; continue; }
+      if (line[i] === ',' && !inQ) { vals.push(cur.trim()); cur = ''; continue; }
+      cur += line[i];
     }
-    vals.push(current.trim());
+    vals.push(cur.trim());
     const obj = {};
     headers.forEach((h, i) => obj[h] = vals[i] || '');
     return obj;
   });
 }
 
-function filterByPeriod(rows, days) {
-  if (days === 0) return rows;
-  const now = new Date();
-  const cutoff = new Date(now.getTime() - days * 86400000);
-  return rows.filter(r => {
-    const d = parseDate(r);
-    return d && d >= cutoff;
-  });
-}
-
 function parseDate(row) {
   const f = row['Fecha'] || row['fecha'] || '';
   if (!f) return null;
-  // Try DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD formats
-  let parts;
-  if (f.includes('/')) { parts = f.split('/'); return new Date(parts[2], parts[1]-1, parts[0]); }
+  let p;
+  if (f.includes('/')) { p = f.split('/'); return new Date(p[2], p[1]-1, p[0]); }
   if (f.match(/^\d{4}-/)) return new Date(f);
-  if (f.includes('-')) { parts = f.split('-'); return new Date(parts[2], parts[1]-1, parts[0]); }
+  if (f.includes('-')) { p = f.split('-'); return new Date(p[2], p[1]-1, p[0]); }
   return new Date(f);
 }
 
-function setPeriod(days) {
-  currentPeriod = days;
-  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  render(filterByPeriod(allRows, days));
+function filterByPeriod(rows, days) {
+  if (days === 0) return rows;
+  const cutoff = new Date(Date.now() - days * 86400000);
+  return rows.filter(r => { const d = parseDate(r); return d && d >= cutoff; });
 }
 
-function render(rows) {
+// ─── Classify ────────────────────────────────────────────
+function classifyRow(row, categories) {
+  const msg = row['Mensaje'] || row['mensaje'] || '';
+  const sheetCat = (row['Categoría'] || row['Categoria'] || row['categoria'] || '').trim().toUpperCase();
+  // Try sheet's own category first
+  if (sheetCat) {
+    const match = categories.find(c => c.sheetKeys && c.sheetKeys.includes(sheetCat));
+    if (match) return match;
+  }
+  // Fallback: keyword match
+  const m = msg.toLowerCase();
+  for (const cat of categories) {
+    if (cat.key === 'otro') continue;
+    if (cat.keywords && cat.keywords.some(k => m.includes(k))) return cat;
+  }
+  return categories.find(c => c.key === 'otro') || categories[categories.length - 1];
+}
+
+// ─── Render ──────────────────────────────────────────────
+function render(rows, restaurant) {
   const el = document.getElementById('content');
   if (!rows.length) {
     el.innerHTML = '<div class="error-box">No hay datos para el período seleccionado.</div>';
     return;
   }
+  const cats = restaurant.categories;
+  const ESCALAR_KEYS = ['reclamo','queja','malo','pésimo','horrible','problema','no funciona','escalar_humano'];
 
-  // Classify each row — prefer sheet's own Categoría if present
-  const catKeyMap = { 'RESERVAS':'reserva','HORARIOS':'horario','CARTA':'menu','MENU':'menu','UBICACION':'ubicacion','UBICACIÓN':'ubicacion','EVENTOS':'evento','TRABAJO':'trabajo','RECLAMO':'escalar','GENERAL':'otro' };
   const classified = rows.map(r => {
     const msg = r['Mensaje'] || r['mensaje'] || '';
     const resp = r['Respuesta'] || r['respuesta'] || '';
-    const sheetCat = (r['Categoría'] || r['Categoria'] || r['categoria'] || '').trim().toUpperCase();
-    const catKey = catKeyMap[sheetCat] || null;
-    const cat = catKey ? (CATEGORIES.find(c => c.key === catKey) || classify(msg)) : classify(msg);
-    return { ...r, category: cat, escalated: isEscalation(msg), msg, resp };
+    const cat = classifyRow(r, cats);
+    const escalated = ESCALAR_KEYS.some(k => msg.toLowerCase().includes(k)) || cat.key === 'reclamo';
+    return { ...r, category: cat, escalated, msg, resp };
   });
 
-  // KPIs
-  const totalMsgs = classified.length;
+  const total = classified.length;
   const uniqueUsers = new Set(classified.map(r => (r['Usuario'] || r['usuario'] || '').toLowerCase())).size;
   const escalated = classified.filter(r => r.escalated).length;
-  const escalationRate = totalMsgs > 0 ? ((escalated / totalMsgs) * 100).toFixed(1) : '0';
-  const resolutionRate = totalMsgs > 0 ? (((totalMsgs - escalated) / totalMsgs) * 100).toFixed(1) : '0';
-  const costPerMsg = 0.003; // GPT-4o-mini ~$0.003 per interaction
-  const totalCost = (totalMsgs * costPerMsg).toFixed(2);
+  const resRate = total > 0 ? (((total - escalated) / total) * 100).toFixed(1) : '0';
+  const escRate = total > 0 ? ((escalated / total) * 100).toFixed(1) : '0';
+  const cost = (total * 0.003).toFixed(2);
 
   // Category counts
   const catCounts = {};
-  CATEGORIES.forEach(c => catCounts[c.key] = 0);
+  cats.forEach(c => catCounts[c.key] = 0);
   classified.forEach(r => catCounts[r.category.key]++);
 
-  // Daily volume for bar chart
+  // Daily volume
   const dailyMap = {};
   classified.forEach(r => {
-    const d = parseDate(r);
-    if (!d) return;
-    const key = d.toISOString().slice(0,10);
-    dailyMap[key] = (dailyMap[key] || 0) + 1;
+    const d = parseDate(r); if (!d) return;
+    const k = d.toISOString().slice(0,10);
+    dailyMap[k] = (dailyMap[k] || 0) + 1;
   });
   const dailyKeys = Object.keys(dailyMap).sort();
   const maxDaily = Math.max(...Object.values(dailyMap), 1);
+  const accent = restaurant.accent;
+  const accentDark = restaurant.accent === '#10b981' ? '#059669' : '#d97706';
 
-  // Build HTML
   el.innerHTML = `
-    <!-- KPI Cards -->
     <div class="kpi-grid">
       <div class="kpi">
         <div class="kpi-icon" style="background:var(--blue-bg);color:var(--blue)">💬</div>
         <div class="kpi-label">Total Mensajes</div>
-        <div class="kpi-value">${totalMsgs}</div>
+        <div class="kpi-value">${total}</div>
         <div class="kpi-sub">${uniqueUsers} usuarios únicos</div>
       </div>
       <div class="kpi">
         <div class="kpi-icon" style="background:var(--green-bg);color:var(--green)">✅</div>
         <div class="kpi-label">Tasa Resolución IA</div>
-        <div class="kpi-value">${resolutionRate}%</div>
-        <div class="kpi-sub">${totalMsgs - escalated} resueltos sin humano</div>
+        <div class="kpi-value">${resRate}%</div>
+        <div class="kpi-sub">${total - escalated} resueltos sin humano</div>
       </div>
       <div class="kpi">
         <div class="kpi-icon" style="background:var(--red-bg);color:var(--red)">🚨</div>
         <div class="kpi-label">Escalaciones</div>
         <div class="kpi-value">${escalated}</div>
-        <div class="kpi-sub">${escalationRate}% del total</div>
+        <div class="kpi-sub">${escRate}% del total</div>
       </div>
       <div class="kpi">
-        <div class="kpi-icon" style="background:var(--amber-bg);color:var(--amber)">💰</div>
+        <div class="kpi-icon" style="background:var(--accent-bg);color:var(--accent)">💰</div>
         <div class="kpi-label">Costo Estimado IA</div>
-        <div class="kpi-value">$${totalCost}</div>
-        <div class="kpi-sub">~$${costPerMsg.toFixed(3)} USD/msg (GPT-4o-mini)</div>
+        <div class="kpi-value">$${cost}</div>
+        <div class="kpi-sub">~$0.003 USD/msg (GPT-4o-mini)</div>
       </div>
       <div class="kpi">
         <div class="kpi-icon" style="background:var(--purple-bg);color:var(--purple)">📊</div>
         <div class="kpi-label">Promedio Diario</div>
-        <div class="kpi-value">${dailyKeys.length > 0 ? (totalMsgs / dailyKeys.length).toFixed(1) : '0'}</div>
-        <div class="kpi-sub">mensajes/día (${dailyKeys.length} días con data)</div>
+        <div class="kpi-value">${dailyKeys.length > 0 ? (total / dailyKeys.length).toFixed(1) : '0'}</div>
+        <div class="kpi-sub">mensajes/día (${dailyKeys.length} días)</div>
       </div>
     </div>
 
-    <!-- Charts Row -->
     <div class="charts-row">
       <div class="chart-card">
-        <div class="chart-title"><span class="dot" style="background:var(--amber)"></span> Volumen Diario</div>
-        <div class="bar-chart" id="barChart">
+        <div class="chart-title"><span class="dot" style="background:var(--accent)"></span> Volumen Diario</div>
+        <div class="bar-chart">
           ${dailyKeys.map(k => {
             const h = (dailyMap[k] / maxDaily) * 160;
-            const label = k.slice(5); // MM-DD
             return `<div class="bar-col">
               <div style="font-size:.65rem;color:var(--text2);margin-bottom:2px">${dailyMap[k]}</div>
-              <div class="bar" style="height:${h}px;background:linear-gradient(180deg,var(--amber),#d97706)"></div>
-              <div style="font-size:.6rem;color:var(--text3);margin-top:4px;white-space:nowrap">${label}</div>
+              <div class="bar" style="height:${h}px;background:linear-gradient(180deg,${accent},${accentDark})"></div>
+              <div style="font-size:.6rem;color:var(--text3);margin-top:4px;white-space:nowrap">${k.slice(5)}</div>
             </div>`;
           }).join('')}
         </div>
@@ -315,8 +385,8 @@ function render(rows) {
       <div class="chart-card">
         <div class="chart-title"><span class="dot" style="background:var(--purple)"></span> Categorías</div>
         <div class="cat-list">
-          ${CATEGORIES.filter(c => catCounts[c.key] > 0).sort((a,b) => catCounts[b.key] - catCounts[a.key]).map(c => {
-            const pct = ((catCounts[c.key] / totalMsgs) * 100).toFixed(0);
+          ${cats.filter(c => catCounts[c.key] > 0).sort((a,b) => catCounts[b.key] - catCounts[a.key]).map(c => {
+            const pct = ((catCounts[c.key] / total) * 100).toFixed(0);
             return `<div class="cat-item">
               <div class="cat-dot" style="background:${c.color}"></div>
               <div class="cat-name">${c.label}</div>
@@ -328,14 +398,18 @@ function render(rows) {
       </div>
     </div>
 
-    <!-- Recent Messages Table -->
     <div class="table-card">
-      <h3>Últimas 20 Conversaciones</h3>
+      <h3>Últimas 20 Conversaciones — ${restaurant.name}</h3>
       <table>
-        <thead><tr><th style="width:90px">Fecha</th><th style="width:70px">Hora</th><th style="width:110px">Usuario</th><th>Conversación</th><th style="width:130px">Categoría</th></tr></thead>
+        <thead><tr>
+          <th style="width:90px">Fecha</th>
+          <th style="width:70px">Hora</th>
+          <th style="width:110px">Usuario</th>
+          <th>Conversación</th>
+          <th style="width:130px">Categoría</th>
+        </tr></thead>
         <tbody>
           ${classified.slice(-20).reverse().map(r => {
-            const tagClass = 'tag-' + r.category.key;
             const msgShort = (r.msg || '').substring(0, 160);
             const respShort = (r.resp || '').substring(0, 200);
             return `<tr>
@@ -344,11 +418,14 @@ function render(rows) {
               <td style="color:var(--text1);font-weight:500;vertical-align:top">${r['Usuario'] || r['usuario'] || '-'}</td>
               <td>
                 <div class="conv-cell">
-                  ${msgShort ? `<div><div class="bubble-label">Cliente</div><div class="bubble bubble-user">${msgShort}${r.msg.length > 160 ? '…' : ''}</div></div>` : ''}
-                  ${respShort ? `<div><div class="bubble-label">Bot IA</div><div class="bubble bubble-bot">${respShort}${r.resp.length > 200 ? '…' : ''}</div></div>` : ''}
+                  ${msgShort ? `<div><div class="bubble-label">Cliente</div><div class="bubble bubble-user">${msgShort}${(r.msg||'').length > 160 ? '…' : ''}</div></div>` : ''}
+                  ${respShort ? `<div><div class="bubble-label">Bot IA</div><div class="bubble bubble-bot">${respShort}${(r.resp||'').length > 200 ? '…' : ''}</div></div>` : ''}
                 </div>
               </td>
-              <td style="vertical-align:top"><span class="tag ${tagClass}">${r.category.label}</span>${r.escalated ? '<br><span class="tag tag-escalar" style="margin-top:4px;display:inline-block">Escalar</span>' : ''}</td>
+              <td style="vertical-align:top">
+                <span class="tag tag-${r.category.key}">${r.category.label}</span>
+                ${r.escalated ? '<br><span class="tag tag-reclamo" style="margin-top:4px;display:inline-block">Escalar</span>' : ''}
+              </td>
             </tr>`;
           }).join('')}
         </tbody>
@@ -356,32 +433,43 @@ function render(rows) {
     </div>
 
     <div class="footer">
-      Dashboard generado por <a href="#">Te Paso El Bot</a> · Datos en tiempo real desde Google Sheets · Última carga: ${new Date().toLocaleString('es-CL')}
+      Dashboard generado por <a href="#">Te Paso El Bot</a> &nbsp;·&nbsp; Grupo Arca &nbsp;·&nbsp;
+      Última carga: ${new Date().toLocaleString('es-CL')}
     </div>
   `;
 }
 
-// Fetch data
-async function loadData() {
+// ─── Load data ───────────────────────────────────────────
+async function loadData(rid) {
+  const restaurant = RESTAURANTS[rid];
+  document.getElementById('content').innerHTML = `<div class="loading"><div class="spinner"></div>Cargando datos de ${restaurant.name}…</div>`;
   try {
-    const resp = await fetch(SHEET_CSV);
+    const resp = await fetch(restaurant.csv);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const text = await resp.text();
-    allRows = parseCSV(text);
-    render(filterByPeriod(allRows, currentPeriod));
-  } catch (err) {
-    document.getElementById('content').innerHTML = `
-      <div class="error-box">
-        <p style="font-size:1.1rem;margin-bottom:.5rem">⚠️ No se pudo cargar el Google Sheet</p>
-        <p style="font-size:.85rem;opacity:.8">Verifica que el Sheet esté publicado en web (File → Share → Publish to web → CSV).</p>
-        <p style="font-size:.75rem;margin-top:.5rem;opacity:.6">Error: ${err.message}</p>
-      </div>`;
+    allRows[rid] = parseCSV(text);
+    if (rid === currentRestaurant) {
+      render(filterByPeriod(allRows[rid], currentPeriod), restaurant);
+    }
+  } catch(err) {
+    if (rid === currentRestaurant) {
+      document.getElementById('content').innerHTML = `
+        <div class="error-box">
+          <p style="font-size:1.1rem;margin-bottom:.5rem">⚠️ No se pudo cargar el Sheet de ${restaurant.name}</p>
+          <p style="font-size:.85rem;opacity:.8">Verifica que el Sheet esté publicado en web (Archivo → Compartir → Publicar en la web → CSV).</p>
+          <p style="font-size:.75rem;margin-top:.5rem;opacity:.6">Error: ${err.message}</p>
+        </div>`;
+    }
   }
 }
 
-loadData();
-// Refresh every 5 minutes
-setInterval(loadData, 300000);
+// ─── Init ────────────────────────────────────────────────
+applyTheme('arca');
+loadData('arca');
+// Preload Savia in background after 2s
+setTimeout(() => loadData('savia'), 2000);
+// Refresh every 5 min
+setInterval(() => loadData(currentRestaurant), 300000);
 </script>
 </body>
 </html>
