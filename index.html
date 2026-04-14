@@ -477,7 +477,10 @@ function render(rows, restaurant) {
 // ─── Load data ───────────────────────────────────────────
 async function loadData(rid) {
   const restaurant = RESTAURANTS[rid];
-  document.getElementById('content').innerHTML = `<div class="loading"><div class="spinner"></div>Cargando datos de ${restaurant.name}…</div>`;
+  // Only show loading spinner if this is the currently visible tab
+  if (rid === currentRestaurant) {
+    document.getElementById('content').innerHTML = `<div class="loading"><div class="spinner"></div>Cargando datos de ${restaurant.name}…</div>`;
+  }
   try {
     const resp = await fetch(restaurant.csv);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
