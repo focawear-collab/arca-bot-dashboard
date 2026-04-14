@@ -399,7 +399,7 @@ function render(rows, restaurant) {
     </div>
 
     <div class="table-card">
-      <h3>Últimas 20 Conversaciones — ${restaurant.name}</h3>
+      <h3>${currentPeriod === 0 ? 'Todas las conversaciones' : currentPeriod === 7 ? 'Últimas 20 conversaciones' : 'Últimas 100 conversaciones'} — ${restaurant.name}</h3>
       <table>
         <thead><tr>
           <th style="width:90px">Fecha</th>
@@ -409,7 +409,7 @@ function render(rows, restaurant) {
           <th style="width:130px">Categoría</th>
         </tr></thead>
         <tbody>
-          ${classified.slice(-20).reverse().map(r => {
+          ${(currentPeriod === 0 ? classified : classified.slice(-(currentPeriod === 7 ? 20 : 100))).reverse().map(r => {
             const msgShort = (r.msg || '').substring(0, 160);
             const respShort = (r.resp || '').substring(0, 200);
             return `<tr>
