@@ -131,7 +131,7 @@ tr:hover td{color:var(--text1);background:var(--surface2)}
           </svg>
         </div>
         <div>
-          <h1>Grupo <span id="brandName">Arca</span> — Bot IA</h1>
+          <h1>Grupo <span>Arca</span> — Bots IA</h1>
           <div class="brand-sub">Dashboard de KPIs en tiempo real</div>
         </div>
       </div>
@@ -150,7 +150,7 @@ tr:hover td{color:var(--text1);background:var(--surface2)}
         <span class="tab-dot"></span> Arca Bar
       </button>
       <button class="tab-btn" id="tab-savia" onclick="switchRestaurant('savia')">
-        <span class="tab-dot"></span> Savia
+        <span class="tab-dot"></span> Savia Bar
       </button>
     </div>
   </div>
@@ -212,7 +212,7 @@ function applyTheme(rid) {
   const r = RESTAURANTS[rid];
   document.documentElement.style.setProperty('--accent', r.accent);
   document.documentElement.style.setProperty('--accent-bg', r.accentBg);
-  document.getElementById('brandName').textContent = r.brandName;
+  // Title stays fixed as "Grupo Arca — Bots IA"
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + rid).classList.add('active');
 }
